@@ -12,40 +12,39 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGODB_URI;
 
-// Middleware
+// ✅ CORS configuration
 const corsOptions = {
   origin: [
     "http://localhost:3000", // dev frontend
     "https://resume-maker-frontend-iota.vercel.app" // deployed frontend
   ],
-  methods: "GET,POST,PUT,DELETE,OPTIONS",
-  allowedHeaders: "Content-Type,Authorization",
-  credentials: true
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 };
-
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight
 
-// Handle preflight requests
-app.options("*", cors(corsOptions));
+// ✅ Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Test route
+// ✅ Test route
 app.get('/', (req, res) => {
   res.send('Hello from Resume Maker Backend!');
 });
 
-// Routes (⚠️ removed `/api` prefix so they work on Vercel root)
+// ✅ Routes (with /api prefix)
 app.use('/api/auth', authRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/templates', templateRoutes);
 
-// Health check
+// ✅ Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Resume Builder API is running' });
 });
 
-// Error handling
+// ✅ Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -54,12 +53,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+// ✅ 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Connect to MongoDB & start server
+// ✅ Connect to MongoDB & start server
 mongoose.connect(MONGO_URI || 'mongodb://localhost:27017/resume-builder')
   .then(() => {
     console.log('✅ Connected to MongoDB');
