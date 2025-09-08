@@ -36,9 +36,9 @@ app.get('/', (req, res) => {
 });
 
 // Routes (⚠️ removed `/api` prefix so they work on Vercel root)
-app.use('/auth', authRoutes);
-app.use('/resume', resumeRoutes);
-app.use('/templates', templateRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/resume', resumeRoutes);
+app.use('/api/templates', templateRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
